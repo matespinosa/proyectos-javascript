@@ -1,3 +1,8 @@
+//  get only unique categories - HARDEST ONE
+// iterate over categories return buttons 
+// make sure to select buttons when they are available
+
+// items
 const menu = [
   {
     id: 1,
@@ -65,10 +70,92 @@ const menu = [
   },
   {
     id: 9,
+    title: 'steak dinner',
+    category: 'dinner',
+    price: 39.99,
+    img: './images/item-10.jpeg',
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
+  {
+    id: 10,
     title: 'quarantine buddy',
     category: 'shakes',
     price: 16.99,
     img: './images/item-9.jpeg',
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
-]
+];
+
+const sectionCenter = document.querySelector('.section-center');
+const contaienr = document.querySelector('.btn-container');
+
+//  load items
+window.addEventListener('DOMContentLoaded', function () {
+  // console.log('shake and bake');
+  displayMenuItems(menu)
+  displayMenuButtons();
+
+  
+});
+// filter items
+
+function displayMenuItems(menuItems) {
+  let displayMenu = menuItems.map(function (item) {
+    // console.log(item);
+
+
+    return `<article class="menu-item">
+          <img src=${item.img} class="photo" alt="menu-item">
+          <div class="item-info">
+            <header>
+              <h4>${item.title}</h4>
+              <h4 class="price">${item.price}</h4>
+            </header>
+            <p class="item-text">${item.desc}</p>
+          </div>
+        </article>`;
+  });
+  displayMenu = displayMenu.join("");
+  
+  sectionCenter.innerHTML = displayMenu
+}
+
+// Buttons
+
+function displayMenuButtons() {
+    const categories = menu.reduce(function (values, item) {
+    if (!values.includes(item.category)) {
+      values.push(item.category);
+    }
+    return values
+    
+  }, ['all'])
+  const categoryBtns = categories.map(function (category) {
+    return `
+    <button class="filter-btn" type="button" data-id=${category}>
+    ${category}
+    </button>`
+  }).join("");
+  contaienr.innerHTML = categoryBtns
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  // filter itmes
+  filterBtns.forEach(function (btn) {
+  btn.addEventListener('click', function (e) {
+    const category = e.currentTarget.dataset.id;
+    const menuCategory = menu.filter(function (menuItem) {
+      // console.log(menuItem.category);
+      if (menuItem.category === category) {
+        return menuItem
+      }
+    });
+    // console.log(menuCategory);
+    if (category === 'all') {
+      displayMenuItems(menu)
+    }
+    else {
+      displayMenuItems(menuCategory)
+    }
+  });
+});
+
+}
